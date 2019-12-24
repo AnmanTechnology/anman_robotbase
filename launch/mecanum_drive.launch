@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Robot description -->
+    <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_base_link" args="0 0 0 0 0 0 /base_footprint /base_link 40" />
+    <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser_frame" args="0.05 0 0.1 0 0 0 /base_link /laser_frame 40" />
+
+
+    <!-- Robot base controller Mecanum-->
+    <node pkg="anman_robotbase" name="base_controller" type="pnu_base.py" output="screen">
+        <param name="cmd_topic" value="cmd_vel"/>
+        <param name="cmd_freq" value="5"/>
+
+        <param name="odom_topic" value="odom"/>
+        <param name="odom_freq" value="10"/>
+
+        <param name="odom_frame_id" value="odom"/>
+        <param name="base_frame_id" value="base_footprint"/>
+
+        <param name="publish_odom_frame" value="True"/>
+
+        <param name="wheel_sep_width" value="0.25"/>
+        <param name="wheel_sep_length" value="0.5"/>
+        <param name="wheel_radius" value="0.05"/>
+    </node>
+</launch>
