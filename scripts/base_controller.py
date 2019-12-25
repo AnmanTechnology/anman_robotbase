@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import math
 import rospy
 from geometry_msgs.msg import Twist, Pose2D, TransformStamped
 from nav_msgs.msg import Odometry
