@@ -1,12 +1,58 @@
 #!/usr/bin/env python
 
 import serial
+from struct import unpack
 
 
 class Cyclope(object):
-    def __init__(self, port, baud=115200):
-        # self.serial = serial.Serial(port, baud, timeout=10)
-        pass
+    TxHeader = [0xFF, 0xFF, 0xFD, 0x00]
+
+    def __init__(self, port, baud=9600):
+        self.serial = serial.Serial(port, baud, timeout=5)
+
+    def setPID(self, motor_id, Kc, Ti, Td):
+        TxBuf = self.TxHeader
+        TxBuf += [motor_id, 0x09, 0x00, 0x03, 0x4C, 0x00]
+        TxBuf += self.to2Bytes(Kc)
+        TxBuf += self.to2Bytes(Ti)
+        TxBuf += self.to2Bytes(Td)
+        CRC = self.updateCRC(0, TxBuf, len(TxBuf))
+        TxBuf += self.to2Bytes(CRC)
+        # print(TxBuf)
+
+    def writeVel(self, motor_id, speed):
+        TxBuf = self.TxHeader + [motor_id, 0x09, 0x00, 0x03, 0x68, 0x00]
+        TxBuf += self.to4Bytes(int(speed*100))
+        CRC = self.updateCRC(0, TxBuf, len(TxBuf))
+        TxBuf += self.to2Bytes(CRC)
+        self.write(TxBuf)
+
+    def readVel(self, motor_id):
+        TxBuf = self.TxHeader + [motor_id, 0x07,
+                                 0x00, 0x02, 0x80, 0x00, 0x04, 0x00]
+        CRC = self.updateCRC(0, TxBuf, len(TxBuf))
+        TxBuf += self.to2Bytes(CRC)
+        self.write(TxBuf)
+
+        try:
+            RxBuf = self.serial.read(1)
+            RxBuf += self.serial.read(self.serial.inWaiting())
+            # RxBuf = [ord(self.serial.read(1))]
+            # RxBuf += map(ord, self.serial.read(self.serial.inWaiting()))
+            if len(RxBuf) == 15:
+                return unpack("<i", RxBuf[9:13])[0]
+                # print(RxBuf[9:13])
+                # return 0
+        except serial.SerialTimeoutException:
+            print("Serial Error!!")
+
+        return 0
+
+    def write(self, txBuff):
+        try:
+            self.serial.write(txBuff)
+        except Exception as e:
+            print(e)
 
     @staticmethod
     def updateCRC(crc_accum, data_blk_ptr, data_blk_size):
@@ -62,13 +108,3 @@ class Cyclope(object):
     @staticmethod
     def to2Bytes(raw):
         return list([(raw >> i & 0xFF) for i in (0, 8)])
-
-    def setPID(self, motor_id, Kc, Ti, Td):
-        TxBuf = [0xFF, 0xFF, 0xFD, 0x00, motor_id,
-                 0x09, 0x00, 0x03, 0x4C, 0x00]
-        TxBuf += self.to2Bytes(Kc)
-        TxBuf += self.to2Bytes(Ti)
-        TxBuf += self.to2Bytes(Td)
-        CRC = self.updateCRC(0, TxBuf, len(TxBuf))
-        TxBuf += self.to2Bytes(CRC)
-        print(TxBuf)

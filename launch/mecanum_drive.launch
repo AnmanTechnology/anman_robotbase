@@ -11,7 +11,7 @@
         <param name="cmd_freq" value="5"/>
 
         <param name="odom_topic" value="odom"/>
-        <param name="odom_freq" value="10"/>
+        <param name="odom_freq" value="5"/>
 
         <param name="odom_frame_id" value="odom"/>
         <param name="base_frame_id" value="base_footprint"/>
