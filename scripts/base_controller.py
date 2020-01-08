@@ -110,7 +110,7 @@ class Omni4Base(RobotBase):
 
 
 class MecanumBase(RobotBase):
-    def __init__(self, wheel_radius, wheel_sep_width, wheel_sep_length,  driveFunc):
+    def __init__(self, wheel_radius, wheel_sep_width, wheel_sep_length,  driveFunc, odomFunc):
         super(MecanumBase, self).__init__()
 
         self.wheel_sep_width = wheel_sep_width / 2.0
@@ -120,6 +120,7 @@ class MecanumBase(RobotBase):
         self.goal_drive_wheel = [0.0, 0.0, 0.0, 0.0]
         self.drive_wheel = [0.0, 0.0, 0.0, 0.0]
         self.drive_func = driveFunc
+        self.odom_func = odomFunc
 
     def commandCB(self, event):
         ux = self.goal_trans_x
@@ -132,10 +133,10 @@ class MecanumBase(RobotBase):
         self.goal_drive_wheel[3] = -1 * (ux - uy + uz) / self.wheel_radius
 
         self.drive_func(self.goal_drive_wheel)
-        self.drive_wheel = self.goal_drive_wheel
+        # self.drive_wheel = self.goal_drive_wheel
 
     def odomCB(self, event):
-
+        self.drive_wheel = self.odom_func()
         self.twist.x = (self.drive_wheel[0] - self.drive_wheel[1] +
                         self.drive_wheel[2] - self.drive_wheel[3])*self.wheel_radius/4.0
         self.twist.y = (-self.drive_wheel[0] - self.drive_wheel[1] +

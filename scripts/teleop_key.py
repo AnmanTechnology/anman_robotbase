@@ -84,10 +84,10 @@ if __name__ == "__main__":
     settings = termios.tcgetattr(sys.stdin)
 
     rospy.init_node('teleop_key')
-    MAX_LIN_VEL = rospy.get_param('~linear_vel_max', 0.09)
-    MAX_ANG_VEL = rospy.get_param('~angular_vel_max', 0.23)
-    LIN_VEL_STEP_SIZE = rospy.get_param('~linear_vel_step', 0.01)
-    ANG_VEL_STEP_SIZE = rospy.get_param('~angular_vel_step', 0.025)
+    MAX_LIN_VEL = rospy.get_param('~linear_vel_max', 0.6)
+    MAX_ANG_VEL = rospy.get_param('~angular_vel_max', 2.0)
+    LIN_VEL_STEP_SIZE = rospy.get_param('~linear_vel_step', 0.05)
+    ANG_VEL_STEP_SIZE = rospy.get_param('~angular_vel_step', 0.05)
 
     pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
     status = 0

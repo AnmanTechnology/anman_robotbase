@@ -1,0 +1,11 @@
+#http://www.reactivated.net/writing_udev_rules.html
+
+#sudo cp 99-pnu.rules /etc/udev/rules.d/
+#sudo udevadm control --reload-rules
+#sudo udevadm trigger
+
+# Base Mecanum Front
+KERNEL=="ttyACM*", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740",ATTRS{serial}=="8D7120875648", MODE:="0777", SYMLINK="pnuMecFront"
+
+# Base Mecanum Rear
+KERNEL=="ttyACM*", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740", ATTRS{serial}=="499022813535", MODE:="0777", SYMLINK="pnuMecRear"
