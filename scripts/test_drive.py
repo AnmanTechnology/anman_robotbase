@@ -11,9 +11,9 @@ if __name__ == "__main__":
         cyclope = Cyclope('/dev/ttyACM0')
         tt = 0
         while True:
-            # cyclope.writeVel(1, 0.0)
-            # time.sleep(0.005)
-            # cyclope.writeVel(2, 0.0)
+            cyclope.writeVel(2, 0)
+            time.sleep(0.005)
+            cyclope.writeVel(1, 0)
             time.sleep(0.005)
             tt = cyclope.readVel(2)/100.0
             time.sleep(0.005)

@@ -14,21 +14,26 @@ if __name__ == "__main__":
 
         try:
             cyclop_front = Cyclope("/dev/pnuMecFront")
+            cyclop_rear = Cyclope("/dev/pnuMecRear")
 
             def driveFunc(arg):
                 # print(arg)
                 cyclop_front.writeVel(1, arg[0])  # Front right
+                cyclop_rear.writeVel(1, arg[2])  # Rear right
                 rospy.sleep(0.005)
-                cyclop_front.writeVel(2, -arg[1])  # Front left
-                rospy.sleep(0.005)
+                cyclop_front.writeVel(2, arg[1])  # Front left
+                cyclop_rear.writeVel(2, arg[3])  # Rear left
+                # rospy.sleep(0.005)
                 pass
 
             def odomFunc():
                 drive_wheel = [0.0, 0.0, 0.0, 0.0]
                 drive_wheel[0] = cyclop_front.readVel(1)/100.0  # Front right
+                drive_wheel[2] = cyclop_rear.readVel(1)/100.0  # Front right
                 rospy.sleep(0.005)
-                drive_wheel[1] = -cyclop_front.readVel(2)/100.0  # Front left
-                rospy.sleep(0.005)
+                drive_wheel[1] = cyclop_front.readVel(2)/100.0  # Front left
+                drive_wheel[3] = cyclop_rear.readVel(2)/100.0  # Front left
+                # rospy.sleep(0.005)
                 print(drive_wheel)
                 return drive_wheel
 
