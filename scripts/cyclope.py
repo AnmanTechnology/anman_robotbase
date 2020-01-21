@@ -8,7 +8,7 @@ class Cyclope(object):
     TxHeader = [0xFF, 0xFF, 0xFD, 0x00]
 
     def __init__(self, port, baud=9600):
-        self.serial = serial.Serial(port, baud, timeout=5)
+        self.serial = serial.Serial(port, baud, timeout=2)
 
     def setPID(self, motor_id, Kc, Ti, Td):
         TxBuf = self.TxHeader
