@@ -5,6 +5,7 @@ from geometry_msgs.msg import Twist, Pose2D, TransformStamped
 from nav_msgs.msg import Odometry
 import tf2_ros
 import tf_conversions
+import serial
 
 
 class RobotBase(object):
@@ -148,4 +149,23 @@ class MecanumBase(RobotBase):
 
 class AckermanBase(RobotBase):
     def __init__(self):
+        pass
+
+
+if __name__ == "__main__":
+
+    try:
+        BaseType = rospy.get_param("~base_type", "diff")
+        if BaseType == "diff":
+            print("Differential drive")
+        elif BaseType == "omni3":
+            print("Omni drive 3 wheel")
+        elif BaseType == "omni4":
+            print("Omni drive 4 wheel")
+        elif BaseType == "mecanum":
+            print("Mecanum drive")
+        elif BaseType == "ackerman":
+            print("Ackerman drive")
+
+    except rospy.ROSInterruptException:
         pass
