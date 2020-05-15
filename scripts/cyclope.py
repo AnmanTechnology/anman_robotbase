@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
-import serial
+import sys
+import time
 from struct import unpack
+
+import serial
 
 
 class Cyclope(object):
